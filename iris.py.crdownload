@@ -1,0 +1,566 @@
+#!/usr/bin/env python
+# coding: utf-8
+
+# In[21]:
+
+
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+
+# In[5]:
+
+
+from sklearn.preprocessing import LabelEncoder
+from sklearn.model_selection import train_test_split
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.metrics import classification_report, confusion_matrix, accuracy_score
+from sklearn.tree import plot_tree
+from sklearn.linear_model import LogisticRegression
+
+
+# ### From seaborn load iris dataset and save it in iris dataframe
+
+# In[6]:
+
+
+iris = sns.load_dataset('iris')
+
+
+# In[7]:
+
+
+iris
+
+
+# ### With the help of dtype function we can know the datatype of dataset
+
+# In[8]:
+
+
+iris.dtypes
+
+
+# ### Return the head of the dataframe
+
+# In[9]:
+
+
+iris.head()
+
+
+# ### Return the first 10 records of the dataframe
+
+# In[10]:
+
+
+iris.head(10)
+
+
+# ### Find the number of rows and columns in the dataset
+
+# In[11]:
+
+
+iris.shape
+
+
+# ### Find out the no. of species in a dataset
+
+# In[12]:
+
+
+iris['species'].unique()
+
+
+# ### In no.
+
+# In[13]:
+
+
+iris['species'].nunique()
+
+
+# ### To know the exact value of petal length
+
+# In[14]:
+
+
+iris['petal_length'].unique()
+
+
+# ### To figure out the mean of petal_length
+
+# In[15]:
+
+
+iris['petal_length'].mean()
+
+
+# ### To figure out the max and min value of petal_length
+
+# In[16]:
+
+
+iris['petal_length'].max()
+
+
+# In[17]:
+
+
+iris['petal_length'].min()
+
+
+# ### With the help of describe function we can know the statistics of nomianal data in a dataset
+
+# In[18]:
+
+
+iris.describe()
+
+
+# ### Data visualization
+
+# ### Scatter Plot
+
+# In[22]:
+
+
+# Scatter Plot
+plt.scatter(iris['sepal_length'],iris['sepal_width'])
+plt.xlabel('Sepal length')
+plt.ylabel('Sepal width')
+plt.title('Scatter plot of Sepal length and Sepal width on Iris dataset')
+
+
+# In[23]:
+
+
+# Scatter Plot
+plt.scatter(iris['petal_length'],iris['petal_width'])
+plt.xlabel('Petal length')
+plt.ylabel('Petal width')
+plt.title('Scatter plot of Petal length and Petal width on Iris dataset')
+
+
+# In[24]:
+
+
+sns.set_style("whitegrid")
+sns.FacetGrid(iris, hue="species")    .map(plt.scatter, "petal_length", "petal_width").add_legend()
+plt.show()
+
+
+# ### Change the set style in the above plot. Also how will you figure out which color is for which species
+
+# In[25]:
+
+
+sns.set_style("darkgrid")
+sns.FacetGrid(iris, hue="species")    .map(plt.scatter, "sepal_length", "sepal_width").add_legend()
+plt.show()
+
+
+# In[26]:
+
+
+sns.set_style("darkgrid")
+sns.FacetGrid(iris, hue="species")    .map(plt.scatter, "petal_length", "petal_width").add_legend()
+plt.show()
+
+
+# ### Pair plots
+
+# In[27]:
+
+
+# Pair Plot
+sns.set_style("darkgrid")
+sns.pairplot(iris, hue="species", height=3).add_legend()
+# sns.pairplot(iris, hue="species", height=3, diag_kind='hist').add_legend()
+plt.show()
+
+
+# ### Box Plot
+
+# ### Box plot for sepal length
+
+# In[28]:
+
+
+sns.boxplot(y = "sepal_length", data=iris)
+
+
+# ### Box plot for petal length
+
+# In[29]:
+
+
+sns.boxplot(y = "petal_length", data=iris)
+
+
+# ### Box plot of sepal length for different species
+
+# In[30]:
+
+
+sns.boxplot(x="species", y = "sepal_length", data=iris)
+
+
+# ### Box plot of petal length for different species
+
+# In[31]:
+
+
+sns.boxplot(x="species", y = "petal_length", data=iris)
+
+
+# In[32]:
+
+
+# Kernel Distribution Estimate
+sns.FacetGrid(iris, hue="species", height=3)    .map(sns.kdeplot, "sepal_length")    .add_legend()
+plt.show() 
+
+
+# In[33]:
+
+
+# Kernel Distribution Estimate
+sns.FacetGrid(iris, hue="species", height=3)    .map(sns.kdeplot, "petal_length")    .add_legend()
+plt.show() 
+
+
+# ### line Plot
+
+# In[34]:
+
+
+# Line Plot
+plt.plot(iris['sepal_length'], label="Sepal Length")
+plt.plot(iris['sepal_width'], label="Sepal Width")
+plt.plot(iris['petal_length'], label="Petal Length")
+plt.plot(iris['petal_width'], label="Petal Width")
+plt.legend()
+plt.show()
+
+
+# ### Find the corelationship
+
+# In[35]:
+
+
+iris.corr()
+
+
+# ### Plot corelation with the help of heatmap
+
+# In[36]:
+
+
+sns.heatmap(iris.corr())
+
+
+# In[37]:
+
+
+sns.heatmap(iris.corr(),annot=True)
+
+
+# ### Histogram
+
+# In[38]:
+
+
+plt.hist(iris['sepal_length'], bins=5)
+plt.show()
+
+
+# In[39]:
+
+
+iris['sepal_length'].max()
+
+
+# In[40]:
+
+
+iris['sepal_length'].min()
+
+
+# In[41]:
+
+
+plt.hist(iris['sepal_width'], bins=5)
+plt.show()
+
+
+# In[42]:
+
+
+iris['sepal_width'].max()
+
+
+# In[43]:
+
+
+iris['sepal_width'].min()
+
+
+# In[44]:
+
+
+plt.hist(iris['petal_length'], bins=5)
+plt.show()
+
+
+# In[45]:
+
+
+iris['petal_length'].max()
+
+
+# In[46]:
+
+
+iris['petal_length'].min()
+
+
+# In[47]:
+
+
+plt.hist(iris['petal_width'], bins=5)
+plt.show()
+
+
+# In[48]:
+
+
+iris['petal_width'].max()
+
+
+# In[49]:
+
+
+iris['petal_length'].min()
+
+
+# ### We are going to train out model
+
+# ### Drop target value and store rest in x
+
+# In[50]:
+
+
+X= iris.drop(['species'], axis =1)
+
+
+# In[51]:
+
+
+X
+
+
+# ### Drop independent value and store it in y
+
+# In[52]:
+
+
+Y = iris['species']
+
+
+# In[53]:
+
+
+Y
+
+
+# ### Converting our species category into value
+
+# In[54]:
+
+
+le = LabelEncoder()
+Y = le.fit_transform(Y)
+Y
+# We get its encoding as above, setosa:0, versicolor:1, virginica:2
+
+
+# ### Converting x and y into X_train, X_test, y_train, y_test and specify percentage of testing data
+
+# ###### random_state =1 means resuffling happen in training and testing dataset
+
+# In[55]:
+
+
+X_train, X_test, y_train, y_test = train_test_split(X , Y, test_size = 0.2, random_state=1)
+
+
+# ### Logistic Regression
+
+# In[56]:
+
+
+lr = LogisticRegression(solver = 'newton-cg')
+
+
+# In[57]:
+
+
+lr.fit(X_train, y_train)
+
+
+# In[58]:
+
+
+y_pred1=lr.predict(X_test)
+
+
+# ### Get the confusion matrix
+
+# In[59]:
+
+
+confusion_matrix(y_test,y_pred1)
+
+
+# ### Plot the confusion matrix with the help of heat map
+
+# In[60]:
+
+
+sns.heatmap(data=confusion_matrix(y_test, y_pred1), annot=True,  cmap = 'Blues')
+plt.ylabel('Actual label')
+plt.xlabel('Predicted label')
+
+
+# ### Get the accuracy score
+
+# In[61]:
+
+
+accuracy_score(y_test,y_pred1)
+
+
+# ### Decision Tree
+
+# In[62]:
+
+
+dtree=DecisionTreeClassifier()
+dtree.fit(X_train,y_train)
+
+
+# In[63]:
+
+
+### Predict the decision tree
+
+
+# In[64]:
+
+
+y_pred2 = dtree.predict(X_test)
+
+
+# ### Get the confusion matrix, heatmap for confusion matrix and accuracy score
+
+# In[65]:
+
+
+confusion_matrix(y_test,y_pred2)
+
+
+# In[66]:
+
+
+sns.heatmap(data=confusion_matrix(y_test, y_pred2), annot=True,  cmap = 'Blues')
+plt.ylabel('Actual label')
+plt.xlabel('Predicted label')
+
+
+# In[67]:
+
+
+accuracy_score(y_test,y_pred2)
+
+
+# ### From above result decision tree our best
+
+# In[68]:
+
+
+iris.columns[:-1]
+# iris.columns[:4]
+
+
+# ### Now visualize the decision tree
+
+# In[69]:
+
+
+plt.figure(figsize=(10,10))
+dec_tree = plot_tree(decision_tree=dtree, feature_names = iris.columns[:-1], 
+                     class_names =["setosa", "vercicolor", "verginica"], filled = True )
+
+
+# ### Random Forest
+
+# In[70]:
+
+
+from sklearn.ensemble import RandomForestClassifier
+
+
+# In[71]:
+
+
+clf = RandomForestClassifier(n_estimators = 2000) 
+
+
+# ### Use 100 decision trees in random forest
+
+# In[72]:
+
+
+clf = RandomForestClassifier(n_estimators = 100) 
+
+
+# In[73]:
+
+
+clf.fit(X_train, y_train)
+
+
+# ### Predict the random forest
+
+# In[74]:
+
+
+y_pred3 = clf.predict(X_test)
+
+
+# ### Get the confusion matrix, heatmap for confusion matrix and accuracy score
+
+# In[75]:
+
+
+confusion_matrix(y_test,y_pred3)
+
+
+# In[76]:
+
+
+sns.heatmap(data=confusion_matrix(y_test, y_pred3), annot=True,  cmap = 'Blues')
+plt.ylabel('Actual label')
+plt.xlabel('Predicted label')
+
+
+# In[77]:
+
+
+accuracy_score(y_test,y_pred3)
+
+
+# #### For our data set random forest and decision trees are giving better accuracy as compared to logistic regression
